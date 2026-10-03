@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!-- LifeDesk Brand Symbol: Desk surface, modular information cards, interconnected nodes -->
+  <defs>
+    <linearGradient id="ld-desk" x1="20" y1="20" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="50%" stop-color="#3730A3" />
+      <stop offset="100%" stop-color="#1E1B4B" />
+    </linearGradient>
+    <linearGradient id="ld-accent" x1="40" y1="30" x2="90" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6366F1" />
+      <stop offset="100%" stop-color="#38BDF8" />
+    </linearGradient>
+    <linearGradient id="ld-card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#E2E8F0" stop-opacity="0.7" />
+    </linearGradient>
+  </defs>
+
+  <!-- Base Isometric Desk Plane -->
+  <path d="M60 22L102 44V76L60 98L18 76V44L60 22Z" fill="url(#ld-desk)" stroke="#312E81" stroke-width="2" />
+  
+  <!-- Desk Horizon Surface (Top Chamfer) -->
+  <path d="M60 25L98 45L60 65L22 45L60 25Z" fill="#4338CA" fill-opacity="0.6" />
+  
+  <!-- Modular Information Blocks on Desk -->
+  <!-- Left Workspace Document Block -->
+  <path d="M34 46L54 36V56L34 66Z" fill="url(#ld-accent)" fill-opacity="0.9" />
+  <path d="M34 46L54 36L44 31L24 41Z" fill="#818CF8" />
+
+  <!-- Right Knowledge / Action Nexus Block -->
+  <path d="M66 56L86 46V66L66 76Z" fill="#0EA5E9" fill-opacity="0.85" />
+  <path d="M66 56L86 46L76 41L56 51Z" fill="#38BDF8" />
+
+  <!-- Central Bridge / Connection Core (Organizing Node) -->
+  <circle cx="60" cy="56" r="6" fill="#F8FAFC" stroke="#4F46E5" stroke-width="2.5" />
+  <circle cx="60" cy="56" r="2.5" fill="#4F46E5" />
+
+  <!-- Dynamic connection links -->
+  <path d="M44 51L54 56M66 56L76 61" stroke="#F8FAFC" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 2" />
+  
+  <!-- Subtle Desk Edge Accent -->
+  <path d="M18 76L60 98L102 76" stroke="#6366F1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

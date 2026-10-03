@@ -1,0 +1,6 @@
+{
+  "name": "LifeDesk",
+  "description": "A personal digital workspace for capturing, connecting, searching, and acting on everything in your digital life. Local-first, private, and fast.",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
