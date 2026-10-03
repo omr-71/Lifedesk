@@ -1,0 +1,11 @@
+{
+  "version": "0.1.1",
+  "notes": "LifeDesk v0.1.1",
+  "pub_date": "2026-10-03T17:00:00Z",
+  "platforms": {
+    "windows-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUbzJoUXFQYmRBbjVmM3ZaczNtZWVOUGg2bjJRRU5ERkNwR0dBQ2NlTVdneUhGTmxSMTZLcWtMT1U5eDBMRXdhcG0xb1EwY3RtSWdWZ1BpaW1Pc3NVYXZ1Mnh4a3lQRXdzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxMDQ3NTU0CWZpbGU6TGlmZURlc2tfMC4xLjFfeDY0LXNldHVwLmV4ZQl2ZXJzaW9uOjAuMS4xCk50WVV0Y0VLQ1VzSGJiNTc4cFhtTkJOUFRTT2IvVE9GcTdTTTdabU5CVWpNNENRQU5RQm5rUzBTajlGQkdjL01mQzRrOXVLNDEyTEtjaTQ5bG1HbEJ3PT0K",
+      "url": "https://github.com/omr-71/Lifedesk/releases/download/v0.1.1/LifeDesk_0.1.1_x64-setup.exe"
+    }
+  }
+}

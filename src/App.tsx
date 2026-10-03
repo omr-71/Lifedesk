@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { check } from '@tauri-apps/plugin-updater';
 import {
   db,
   WorkspaceItem,
@@ -47,6 +48,24 @@ export function App() {
   // Drag and drop overlay state
   const [isDraggingFile, setIsDraggingFile] = useState(false);
 
+  // LifeDesk automatic update check
+  useEffect(() => {
+    const checkForUpdates = async () => {
+      try {
+        const update = await check();
+
+        if (update) {
+          console.log(`LifeDesk update available: ${update.version}`);
+          await update.downloadAndInstall();
+        }
+      } catch (error) {
+        console.error('LifeDesk update check failed:', error);
+      }
+    };
+
+    checkForUpdates();
+  }, []);
+
   // Initial load
   useEffect(() => {
     loadAllData();
@@ -55,6 +74,7 @@ export function App() {
   const loadAllData = async () => {
     try {
       const storedSettings = await db.settings.get('default');
+
       if (storedSettings) {
         const merged: UserSettings = { ...DEFAULT_SETTINGS, ...storedSettings };
         setSettings(merged);
@@ -81,12 +101,15 @@ export function App() {
     }
   };
 
-  // Sync theme, accent, corner radius, density, font size, and animation intensity with DOM + OS media query
+  // Sync theme, accent, corner radius, density, font size, and animation intensity
+  // with DOM + OS media query
   useEffect(() => {
     syncAppearanceToDOM(settings);
 
     if (typeof window === 'undefined' || !window.matchMedia) return;
+
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
     const handleSystemThemeChange = () => {
       if (settings.theme === 'system') {
         syncAppearanceToDOM(settings);
@@ -94,23 +117,31 @@ export function App() {
     };
 
     mediaQuery.addEventListener('change', handleSystemThemeChange);
-    return () => mediaQuery.removeEventListener('change', handleSystemThemeChange);
+
+    return () =>
+      mediaQuery.removeEventListener('change', handleSystemThemeChange);
   }, [settings]);
 
   const handleToggleSidebarMode = useCallback(async () => {
     setSettings((prev) => {
       const nextMode: 'expanded' | 'compact' =
         prev.sidebarMode === 'compact' ? 'expanded' : 'compact';
-      const updated: UserSettings = { ...prev, sidebarMode: nextMode };
+
+      const updated: UserSettings = {
+        ...prev,
+        sidebarMode: nextMode,
+      };
+
       syncAppearanceToDOM(updated);
       db.settings.put(updated).catch(() => {});
+
       return updated;
     });
   }, []);
 
   // Global Keyboard Shortcuts:
   // - Cmd+K / Ctrl+K -> Command Palette
-  // - Ctrl+B / Cmd+B -> Sidebar Toggle (ignoring inputs, textareas, contenteditable)
+  // - Ctrl+B / Cmd+B -> Sidebar Toggle
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       const key = e.key.toLowerCase();
@@ -123,29 +154,36 @@ export function App() {
 
       if ((e.ctrlKey || e.metaKey) && key === 'b') {
         const target = e.target as HTMLElement | null;
+
         if (target) {
           const tagName = target.tagName.toLowerCase();
+
           const isEditable =
             tagName === 'input' ||
             tagName === 'textarea' ||
             tagName === 'select' ||
             target.isContentEditable;
+
           if (isEditable) {
             return;
           }
         }
+
         e.preventDefault();
         handleToggleSidebarMode();
       }
     };
+
     window.addEventListener('keydown', handleGlobalKeyDown);
+
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
   }, [handleToggleSidebarMode]);
 
-  // Global Drag & Drop file listener -> triggers Intelligent Import Pipeline immediately
+  // Global Drag & Drop file listener
   useEffect(() => {
     const handleDragOver = (e: DragEvent) => {
       e.preventDefault();
+
       if (e.dataTransfer?.types.includes('Files')) {
         setIsDraggingFile(true);
       }
@@ -153,6 +191,7 @@ export function App() {
 
     const handleDragLeave = (e: DragEvent) => {
       e.preventDefault();
+
       if (e.clientX === 0 || e.clientY === 0) {
         setIsDraggingFile(false);
       }
@@ -161,6 +200,7 @@ export function App() {
     const handleDrop = (e: DragEvent) => {
       e.preventDefault();
       setIsDraggingFile(false);
+
       if (e.dataTransfer?.files && e.dataTransfer.files.length > 0) {
         setDroppedFile(e.dataTransfer.files[0]);
         setCaptureInitialMode('file');
@@ -200,37 +240,66 @@ export function App() {
   };
 
   const handleConfirmAttentionItem = async (id: string) => {
-    await db.attentionItems.update(id, { status: 'confirmed', updatedAt: Date.now() });
+    await db.attentionItems.update(id, {
+      status: 'confirmed',
+      updatedAt: Date.now(),
+    });
+
     loadAllData();
   };
 
   const handleDismissAttentionItem = async (id: string) => {
-    await db.attentionItems.update(id, { status: 'dismissed', updatedAt: Date.now() });
+    await db.attentionItems.update(id, {
+      status: 'dismissed',
+      updatedAt: Date.now(),
+    });
+
     loadAllData();
   };
 
   const handleCompleteAttentionItem = async (id: string) => {
-    await db.attentionItems.update(id, { status: 'completed', updatedAt: Date.now() });
+    await db.attentionItems.update(id, {
+      status: 'completed',
+      updatedAt: Date.now(),
+    });
+
     loadAllData();
   };
 
   const handleToggleTheme = async () => {
-    const isCurrentlyDark = document.documentElement.classList.contains('dark');
+    const isCurrentlyDark =
+      document.documentElement.classList.contains('dark');
+
     const nextTheme: 'light' | 'dark' = isCurrentlyDark ? 'light' : 'dark';
-    const updated: UserSettings = { ...settings, theme: nextTheme };
+
+    const updated: UserSettings = {
+      ...settings,
+      theme: nextTheme,
+    };
+
     syncAppearanceToDOM(updated);
     setSettings(updated);
+
     await db.settings.put(updated);
   };
 
   const handleExportBackup = async () => {
     const json = await exportFullBackup();
-    const blob = new Blob([json], { type: 'application/json' });
+
+    const blob = new Blob([json], {
+      type: 'application/json',
+    });
+
     const url = URL.createObjectURL(blob);
+
     const a = document.createElement('a');
     a.href = url;
-    a.download = `lifedesk_backup_${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `lifedesk_backup_${new Date()
+      .toISOString()
+      .slice(0, 10)}.json`;
+
     a.click();
+
     URL.revokeObjectURL(url);
   };
 
@@ -241,17 +310,25 @@ export function App() {
 
   const handleReadAttentionAloudCommand = () => {
     setCurrentTab('attention');
+
     const active = attentionItems.filter(
       (a) => a.status === 'pending' || a.status === 'confirmed'
     );
+
     if (active.length === 0) {
-      speechService.speakText('Nothing needs your attention right now. Your queue is clear.');
+      speechService.speakText(
+        'Nothing needs your attention right now. Your queue is clear.'
+      );
     } else {
       const text = `You have ${active.length} item${
         active.length === 1 ? '' : 's'
       } needing attention. ${active
-        .map((a, i) => `Item ${i + 1}: ${a.title}, from ${a.sourceItemTitle}.`)
+        .map(
+          (a, i) =>
+            `Item ${i + 1}: ${a.title}, from ${a.sourceItemTitle}.`
+        )
         .join(' ')}`;
+
       speechService.speakText(text);
     }
   };
@@ -273,14 +350,16 @@ export function App() {
             <p className="text-sm font-bold text-slate-900 dark:text-white">
               Drop file onto your desk
             </p>
+
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              LifeDesk will extract text, detect dates, and organize it automatically
+              LifeDesk will extract text, detect dates, and organize it
+              automatically
             </p>
           </div>
         </div>
       )}
 
-      {/* Navigation (Desktop sidebar & Mobile top/bottom) */}
+      {/* Navigation */}
       <Navigation
         currentTab={currentTab}
         onSelectTab={setCurrentTab}

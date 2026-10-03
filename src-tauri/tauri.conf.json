@@ -1,14 +1,16 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "LifeDesk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "identifier": "com.omlabhade.lifedesk",
+
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:3000",
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build"
   },
+
   "app": {
     "windows": [
       {
@@ -23,9 +25,11 @@
       "csp": null
     }
   },
+
   "bundle": {
     "active": true,
     "targets": "all",
+    "createUpdaterArtifacts": true,
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -35,6 +39,15 @@
     ],
     "android": {
       "debugApplicationIdSuffix": ".debug"
+    }
+  },
+
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDlGNDBCNzNEMkExNERBRTgKUldUbzJoUXFQYmRBbjB4MWpkYWxSTElFK29DWEd2c0xtR1A3M05nbEsraTk0Z2VNaGkxZHV5L1IK",
+      "endpoints": [
+        "https://github.com/omr-71/Lifedesk/releases/latest/download/latest.json"
+      ]
     }
   }
 }
